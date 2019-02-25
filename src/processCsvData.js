@@ -1,31 +1,22 @@
-import { triggerDownload } from "./download";
 import { NAME_MAP, MONTHS } from "./constants";
-const pdfform = window.pdfform;
 
 const INFO_LINE_INDEX = 1;
 const START_ENTRIES_LINE_INDEX = 4;
 
-export async function fetchSourcePdf() {
-  return fetch("./source.pdf").then(data => data.arrayBuffer());
-}
-
-export async function fillPdf(csvLines) {
+export function processCsvData(csvLines) {
   if (!validateCsv(csvLines)) {
     throw new Error("Invalid CSV");
   }
 
-  let data = {};
+  let data = {
+    __meta: {
+      selected: false
+    }
+  };
+
   data = addModuleInfoData(data, csvLines);
 
-  const pdf = await fetchSourcePdf();
-  const pages = generatePages(data, csvLines);
-  const firstPage = pages[0];
-
-  const filledBuffer = pdfform().transform(pdf, firstPage);
-
-  const blob = new Blob([filledBuffer], { type: "application/pdf" });
-
-  triggerDownload(blob, "test.pdf", "application/pdf");
+  return generatePages(data, csvLines);
 }
 
 function validateCsv(csvLines) {
@@ -117,19 +108,9 @@ function generatePages(basePage, csvLines) {
     currentPage = { ...basePage };
   }
 
-  return pages
-    .map((page, index) => ({
-      ...page,
-      [NAME_MAP.sheetNumber]: String(index + 1),
-      [NAME_MAP.maxSheets]: String(pages.length)
-    }))
-    .map(page => {
-      const newPage = {};
-
-      for (let key in page) {
-        newPage[key] = [page[key]];
-      }
-
-      return newPage;
-    });
+  return pages.map((page, index) => ({
+    ...page,
+    [NAME_MAP.sheetNumber]: String(index + 1),
+    [NAME_MAP.maxSheets]: String(pages.length)
+  }));
 }
