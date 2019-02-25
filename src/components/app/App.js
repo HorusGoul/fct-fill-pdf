@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import "./App.css";
 import { parseCsv } from "../../csvParser";
+import { fillPdf } from "../../fillPdf";
 
 function App() {
   const fileRef = useRef(null);
@@ -9,7 +10,9 @@ function App() {
     const fileInput = fileRef.current;
 
     const result = await parseCsv(fileInput.files[0]);
-    console.log(result);
+    const csvLines = result.data;
+
+    fillPdf(csvLines);
   }
 
   return (

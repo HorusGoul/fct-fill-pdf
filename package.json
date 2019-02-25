@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "js-file-download": "^0.4.4",
     "papaparse": "^4.6.3",
-    "pdfform.js": "^1.0.13",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-scripts": "2.1.5"
