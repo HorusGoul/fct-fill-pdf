@@ -1,49 +1,6 @@
 import { triggerDownload } from "./download";
+import { NAME_MAP, MONTHS } from "./constants";
 const pdfform = window.pdfform;
-
-const NAME_MAP = {
-  weekFrom: "Texto1",
-  weekTo: "Texto2",
-  month: "Texto3",
-  shortYear: "Texto4",
-  school: "Texto5",
-  professor: "Texto6",
-  company: "Texto7",
-  mentor: "Texto8",
-  alumn: "Texto9",
-  grade: "Texto10",
-  gradeType: "Cuadro combinado2",
-  activity1: "Texto12",
-  time1: "Texto13",
-  observations1: "Texto14",
-  activity2: "Texto15",
-  time2: "Texto16",
-  observations2: "Texto17",
-  activity3: "Texto18",
-  time3: "Texto19",
-  observations3: "Texto20",
-  activity4: "Texto21",
-  time4: "Texto22",
-  observations4: "Texto23",
-  activity5: "Texto24",
-  time5: "Texto25",
-  observations5: "Texto26",
-};
-
-const MONTHS = [
-  "Enero",
-  "Febrero",
-  "Marzo",
-  "Abril",
-  "Mayo",
-  "Junio",
-  "Julio",
-  "Agosto",
-  "Septiembre",
-  "Octubre",
-  "Noviembre",
-  "Diciembre",
-];
 
 const INFO_LINE_INDEX = 1;
 const START_ENTRIES_LINE_INDEX = 4;
@@ -87,15 +44,22 @@ function validateCsv(csvLines) {
 function addModuleInfoData(data, csvLines) {
   const moduleInfoLine = csvLines[INFO_LINE_INDEX];
 
+  const professor = moduleInfoLine[2];
+  const mentor = moduleInfoLine[3];
+  const alumn = moduleInfoLine[4];
+
   return {
     ...data,
+    [NAME_MAP.professor]: professor,
+    [NAME_MAP.mentor]: mentor,
+    [NAME_MAP.alumn]: alumn,
+    [NAME_MAP.professorSign]: professor,
+    [NAME_MAP.mentorSign]: mentor,
+    [NAME_MAP.alumnSign]: alumn,
     [NAME_MAP.school]: moduleInfoLine[0],
-    [NAME_MAP.professor]: moduleInfoLine[2],
     [NAME_MAP.company]: moduleInfoLine[1],
-    [NAME_MAP.mentor]: moduleInfoLine[3],
-    [NAME_MAP.alumn]: moduleInfoLine[4],
     [NAME_MAP.grade]: moduleInfoLine[5],
-    [NAME_MAP.gradeType]: moduleInfoLine[6],
+    [NAME_MAP.gradeType]: moduleInfoLine[6]
   };
 }
 
@@ -140,7 +104,7 @@ function generatePages(basePage, csvLines) {
       [NAME_MAP.shortYear]: String(date.getFullYear() % 100),
       [NAME_MAP[`activity${weekDay}`]]: entry[2],
       [NAME_MAP[`time${weekDay}`]]: entry[1],
-      [NAME_MAP[`observations${weekDay}`]]: entry[3],
+      [NAME_MAP[`observations${weekDay}`]]: entry[3]
     };
 
     if (i === csvLines.length - 1) {
@@ -153,5 +117,19 @@ function generatePages(basePage, csvLines) {
     currentPage = { ...basePage };
   }
 
-  return pages;
+  return pages
+    .map((page, index) => ({
+      ...page,
+      [NAME_MAP.sheetNumber]: String(index + 1),
+      [NAME_MAP.maxSheets]: String(pages.length)
+    }))
+    .map(page => {
+      const newPage = {};
+
+      for (let key in page) {
+        newPage[key] = [page[key]];
+      }
+
+      return newPage;
+    });
 }
