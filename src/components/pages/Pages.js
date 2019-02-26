@@ -1,13 +1,13 @@
 import React from "react";
-import { downloadPage } from "../../download";
+import { downloadPage, downloadMultiplePages } from "../../download";
 
 export function Pages({ pages, setPages }) {
   if (!pages.length) {
     return null;
   }
 
-  const selectedCount = pages.filter(page => page.__meta.selected).length;
-  const allSelected = selectedCount === pages.length;
+  const selectedPages = pages.filter(page => page.__meta.selected);
+  const allSelected = selectedPages.length === pages.length;
 
   function toggleCheck(page) {
     setPages(pages =>
@@ -20,8 +20,8 @@ export function Pages({ pages, setPages }) {
           ...currentPage,
           __meta: {
             ...currentPage.__meta,
-            selected: !currentPage.__meta.selected
-          }
+            selected: !currentPage.__meta.selected,
+          },
         };
       })
     );
@@ -33,13 +33,17 @@ export function Pages({ pages, setPages }) {
     setPages(pages =>
       pages.map(page => ({
         ...page,
-        __meta: { ...page, selected: newState }
+        __meta: { ...page.__meta, selected: newState },
       }))
     );
   }
 
   function downloadPageClick(page) {
     downloadPage(page);
+  }
+
+  function downloadSelectedClick() {
+    downloadMultiplePages(selectedPages);
   }
 
   return (
@@ -76,9 +80,7 @@ export function Pages({ pages, setPages }) {
                 />
               </td>
               <td>{index + 1}</td>
-              <td>
-                Hoja {index + 1} de {pages.length}
-              </td>
+              <td>{page.__meta.fileName}</td>
               <td>
                 <button
                   onClick={e => downloadPageClick(page)}
@@ -92,11 +94,13 @@ export function Pages({ pages, setPages }) {
         </tbody>
       </table>
 
-      {selectedCount > 1 && (
-        <button disabled className="button is-primary is-big">
-          Descargar seleccionados
-        </button>
-      )}
+      <button
+        onClick={downloadSelectedClick}
+        disabled={selectedPages.length === 0}
+        className="button is-primary is-medium"
+      >
+        Descargar seleccionados
+      </button>
     </div>
   );
 }

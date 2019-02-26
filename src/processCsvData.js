@@ -10,8 +10,8 @@ export function processCsvData(csvLines) {
 
   let data = {
     __meta: {
-      selected: false
-    }
+      selected: false,
+    },
   };
 
   data = addModuleInfoData(data, csvLines);
@@ -50,7 +50,7 @@ function addModuleInfoData(data, csvLines) {
     [NAME_MAP.school]: moduleInfoLine[0],
     [NAME_MAP.company]: moduleInfoLine[1],
     [NAME_MAP.grade]: moduleInfoLine[5],
-    [NAME_MAP.gradeType]: moduleInfoLine[6]
+    [NAME_MAP.gradeType]: moduleInfoLine[6],
   };
 }
 
@@ -95,7 +95,7 @@ function generatePages(basePage, csvLines) {
       [NAME_MAP.shortYear]: String(date.getFullYear() % 100),
       [NAME_MAP[`activity${weekDay}`]]: entry[2],
       [NAME_MAP[`time${weekDay}`]]: entry[1],
-      [NAME_MAP[`observations${weekDay}`]]: entry[3]
+      [NAME_MAP[`observations${weekDay}`]]: entry[3],
     };
 
     if (i === csvLines.length - 1) {
@@ -108,9 +108,18 @@ function generatePages(basePage, csvLines) {
     currentPage = { ...basePage };
   }
 
-  return pages.map((page, index) => ({
-    ...page,
-    [NAME_MAP.sheetNumber]: String(index + 1),
-    [NAME_MAP.maxSheets]: String(pages.length)
-  }));
+  return pages.map((page, index) => {
+    const sheetNumber = String(index + 1);
+    const maxSheets = String(pages.length);
+
+    return {
+      ...page,
+      [NAME_MAP.sheetNumber]: sheetNumber,
+      [NAME_MAP.maxSheets]: maxSheets,
+      __meta: {
+        ...page.__meta,
+        fileName: `hoja${sheetNumber}de${maxSheets}.pdf`,
+      },
+    };
+  });
 }

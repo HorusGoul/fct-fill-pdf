@@ -6,7 +6,7 @@ import { Pages } from "../pages/Pages";
 function App() {
   const fileRef = useRef(null);
   const [fileName, setFileName] = useState("Introduce un archivo .csv");
-  const [pages, setPages] = useState([{ __meta: { selected: true } }]);
+  const [pages, setPages] = useState([]);
 
   async function onGenerarClick() {
     const fileInput = fileRef.current;
