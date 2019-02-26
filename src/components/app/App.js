@@ -24,7 +24,7 @@ function App() {
   return (
     <section className="section">
       <div className="container">
-        <h1 className="title">Generar los PDFs de la FCT</h1>
+        <h1 className="title">FCT Filler</h1>
         <h2 className="subtitle">
           Descarga tus actividades con el PDF oficial de la Junta de Andalucía
         </h2>
