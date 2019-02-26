@@ -59,6 +59,18 @@ function App() {
         </div>
 
         <Pages pages={pages} setPages={setPages} />
+
+        <footer class="footer has-background-white">
+          <div class="content has-text-centered">
+            <p>
+              Made with <i class="fas fa-heart has-text-danger" /> by{" "}
+              <a href="https://horuslugo.com">Horus Lugo</a>
+              <br />
+              Check out the source code at{" "}
+              <a href="https://github.com/HorusGoul/fct-fill-pdf">GitHub</a>
+            </p>
+          </div>
+        </footer>
       </div>
     </section>
   );
