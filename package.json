@@ -5,7 +5,7 @@
   "dependencies": {
     "js-file-download": "^0.4.4",
     "jszip": "^3.2.0",
-    "papaparse": "^4.6.3",
+    "papaparse": "^5.2.0",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-scripts": "2.1.5"
